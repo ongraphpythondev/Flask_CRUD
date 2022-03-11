@@ -31,11 +31,17 @@ db.create_all()
 # this is for routing
 @app.route("/")
 def book():
+    """It shows all the books.
+    
+    """
     books = Book.query.order_by(Book.created).all()
     return render_template("book.html" , books = books)
 
 @app.route("/add" , methods=['GET','POST'])
 def books():
+    """It create a book.
+
+    """
     if request.method == "GET":
         return render_template("add.html")
     elif request.method == "POST":
@@ -52,18 +58,25 @@ def books():
 
 @app.route("/delete/<pk>" )
 def delete(pk):
-        
+    """It delete a specific book.
+    
+    Args:
+        pk (int): This is the primary key of a perticular book
+    """
+    book_obj =Book.query.filter_by(id = pk).first()
+    db.session.delete(book_obj)
+    db.session.commit()
 
-        book_obj =Book.query.filter_by(id = pk).first()
-        db.session.delete(book_obj)
-        db.session.commit()
-
-        return redirect(url_for("book"))
+    return redirect(url_for("book"))
 
 
 @app.route("/update/<pk>" , methods=['GET','POST'])
 def update(pk):
-    
+    """It update a specific book.   
+
+    Args:
+            pk (int): This is the primary key of a perticular book
+    """
     book_obj =Book.query.filter_by(id = pk).first()
     if request.method == "GET":
         return render_template("update.html" , book_name = book_obj.name , author = book_obj.author , id = book_obj.id)
@@ -73,7 +86,6 @@ def update(pk):
         name = request.form["name"]
         author = request.form["author"]
         
-
         book_obj.name = name
         book_obj.author = author
         db.session.commit()
