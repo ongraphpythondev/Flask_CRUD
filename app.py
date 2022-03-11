@@ -4,7 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:1234@localhost/books_crud"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:1234@localhost/books_crud"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -25,6 +26,7 @@ class Book(db.Model):
         return f"id = {self.id} name = {self.name}"
     
 
+db.create_all()
 
 # this is for routing
 @app.route("/")
